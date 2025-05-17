@@ -1,0 +1,11 @@
+name: brainstormingapp
+services:
+  frontend:
+    project: ./frontend
+    language: js
+    host: staticwebapp
+    dist: build
+  api:
+    project: ./api-server
+    language: js
+    host: appservice
