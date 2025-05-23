@@ -37,7 +37,7 @@ Questa applicazione combina React, TypeScript e Tailwind CSS per il frontend con
 - Node.js 18 o successivo
 - Sottoscrizione Azure
 - Azure CLI
-- Azure Developer CLI (azd)
+- Visual Studio Code con l'estensione "Azure Tools"
 
 ## Sviluppo Locale
 
@@ -75,29 +75,41 @@ Questa applicazione combina React, TypeScript e Tailwind CSS per il frontend con
 
 ## Deployment
 
-L'applicazione è configurata per il deployment su Azure utilizzando Azure Developer CLI (azd):
+Il modo consigliato per pubblicare questa applicazione è tramite Visual Studio Code e la funzione "Deploy to Web App":
 
-1. Accedi ad Azure:
-   ```bash
-   azd auth login
-   ```
+1. **Crea le risorse Azure:**
+   - Usa il portale Azure o l'estensione Azure Tools di VS Code per creare:
+     - Una Azure Web App per il backend (Node.js)
+     - Una Azure Web App o Azure Static Web App per il frontend (React)
+     - Una risorsa Azure OpenAI
+     - Azure Key Vault (per i segreti)
+     - (Opzionale) Application Insights per il monitoraggio
 
-2. Inizializza l'ambiente:
-   ```bash
-   azd init
-   ```
+2. **Configura le variabili d'ambiente:**
+   - Per il backend (App Service): imposta le Application Settings in Azure:
+     - `AZURE_OPENAI_ENDPOINT` = il tuo endpoint Azure OpenAI
+     - `AZURE_OPENAI_KEY` = la tua chiave Azure OpenAI
+     - `AZURE_OPENAI_DEPLOYMENT` = il nome del deployment (es. gpt-4)
+     - `PORT` = 3001 (o altro se necessario)
+   - Per il frontend: imposta la variabile d'ambiente in `.env`:
+     - `REACT_APP_API_URL=https://<nome-backend-app>.azurewebsites.net/api`
 
-3. Esegui il deployment dell'applicazione:
-   ```bash
-   azd up
-   ```
+3. **Aggiorna l'URL API nel codice:**
+   - In `frontend/src/App.tsx`, sostituisci eventuali URL API hardcoded con:
+     ```js
+     const apiUrl = process.env.REACT_APP_API_URL + '/api/generate';
+     ```
+     Oppure usa direttamente la variabile d'ambiente.
 
-Questo deployerà:
-- Frontend su Azure Static Web Apps
-- Backend su Azure App Service
-- Servizio Azure OpenAI
-- Application Insights per il monitoraggio
-- Azure Key Vault per i segreti
+4. **Deploy da VS Code:**
+   - Apri le cartelle frontend e backend in VS Code.
+   - Clicca col destro sulla cartella del progetto e seleziona **Deploy to Web App** (sia per frontend che per backend).
+   - Segui le istruzioni per selezionare le risorse Azure corrette.
+
+5. **Verifica il deployment:**
+   - Visita gli URL del frontend e backend pubblicati per verificare che tutto funzioni.
+
+Per maggiori dettagli, consulta la [documentazione di Azure Tools per VS Code](https://learn.microsoft.com/it-it/azure/developer/vscode/).
 
 ## Contribuire
 
